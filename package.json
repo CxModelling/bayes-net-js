@@ -1,0 +1,40 @@
+{
+  "name": "bayes-net-js",
+  "version": "1.0.0",
+  "description": "A probability graphical machine learning tool based on Bayesian Networks",
+  "main": "build/bayes-net.js",
+  "unpkg": "build/bayes-net.min.js",
+  "module": "index",
+  "scripts": {
+    "pretest": "(if exist build rd /q /s build) && mkdir build && rollup -c",
+    "test": "tape test/**/*-test.js && eslint index.js src",
+    "build": "uglifyjs -b beautify=false build/bayes-net.js -c -m -o build/bayes-net.min.js",
+    "prepublishOnly": "npm run pretest && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TimeWz667/bayes-net-js.git"
+  },
+  "keywords": [
+    "Bayesian Network",
+    "DAG",
+    "Directed Acyclic Graph"
+  ],
+  "author": "TimeWz667",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TimeWz667/bayes-net-js/issues"
+  },
+  "homepage": "https://github.com/TimeWz667/bayes-net-js#readme",
+  "devDependencies": {
+    "eslint": "^4.19.0",
+    "rollup": "^0.57.1",
+    "tape": "^4.9.0",
+    "uglify-js-es6": "^2.8.9"
+  },
+  "dependencies": {
+    "infergraph.js": "^1.0.0",
+    "mathjs": "^5.0.0",
+    "obj-creator": "^1.0.5"
+  }
+}
