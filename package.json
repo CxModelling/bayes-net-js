@@ -35,6 +35,8 @@
   "dependencies": {
     "infergraph.js": "^1.0.0",
     "mathjs": "^5.0.0",
-    "obj-creator": "^1.0.5"
+    "npm": "^6.1.0",
+    "obj-creator": "^1.0.5",
+    "probability-distributions": "^0.9.1"
   }
 }
