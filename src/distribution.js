@@ -1,7 +1,6 @@
-const PD = require("probability-distributions");
-const oc = require("obj-creator");
-const math = require("mathjs");
-
+import * as math from "mathjs";
+import * as PD from "probability-distributions";
+import * as oc from "obj-creator";
 
 
 class ProbabilityDistribution {
@@ -200,18 +199,9 @@ ws.register({
     ]
 });
 
-var f = dist.parse("exp(2)");
-console.log(f.sample());
-console.log(f.Name);
-console.log(f.toJSON());
-
-
-f = dist.parse("binom(2, 0.5)");
-console.log(f.sample());
-console.log(f.Name);
-console.log(f.toJSON());
-
-f = ws.parse("gamma(2, 0.5)");
-console.log(f.sample());
-console.log(f.Name);
-console.log(f.toJSON());
+export default {
+    Exp: DExp,
+    Gamma: DGamma,
+    Binom: DBinom,
+    parse: function(s) {return ws.parse(s)}
+}
