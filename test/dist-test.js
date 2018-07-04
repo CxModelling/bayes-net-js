@@ -6,20 +6,20 @@ const tape = require("tape"),
 
 tape("distributions", function(test) {
     let f;
-    f = dist.parse("exp(2)");
+    f = dist.parseDistribution("exp(2)");
     test.equals(f.Name, "exp(2)");
     test.deepEquals(f.toJSON().Args, { rate: 2 });
 
-    f = dist.parse("binom(2, 0.5)");
+    f = dist.parseDistribution("binom(2, 0.5)");
     test.equals(f.Name, "binom(2, 0.5)");
     test.deepEquals(f.toJSON().Args, { size: 2, prob: 0.5 });
 
-    f = dist.parse("gamma(2, 0.5/2)");
+    f = dist.parseDistribution("gamma(2, 0.5/2)");
     test.equals(f.Name, "gamma(2, 0.25)");
     test.deepEquals(f.toJSON().Args, { shape: 2, rate: 0.25 });
 
-    f = dist.parse("gamma(2, 0.5/k)");
-    f = dist.compile(f, {k: 2});
+    f = dist.parseDistribution("gamma(2, 0.5/k)");
+    f = f.compile({k: 2});
     test.equals(f.Name, "gamma(2, 0.25)");
     test.deepEquals(f.toJSON().Args, { shape: 2, rate: 0.25 });
     test.end();

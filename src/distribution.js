@@ -204,15 +204,17 @@ export default {
     Exp: DExp,
     Gamma: DGamma,
     Binom: DBinom,
-    parse: function(exp) {
+    parseDistribution: function(exp) {
         const parsed = parser.parseFunction(exp);
+
+        parsed.compile = function(loc) {
+            return ws.fromJSON(parser.assignParents(this, loc));
+        };
+
         if (parsed.Parents.length === 0) {
-            return this.compile(parsed);
+            return parsed.compile();
         } else {
             return parsed;
         }
-    },
-    compile: function(parsed, loc) {
-        return ws.fromJSON(parser.assignParents(parsed, loc));
     }
 }

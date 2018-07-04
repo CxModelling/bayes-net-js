@@ -3,6 +3,7 @@
  */
 import * as math from "mathjs";
 import {default as parser} from "../parser";
+import {default as dist} from "../distribution";
 
 
 class Loci {
@@ -84,11 +85,15 @@ class ExoValueLoci extends Loci {
 
 
 class FunctionLoci extends Loci {
-    constructor(name, fn) {
+    constructor(name, fn, parents) {
         super(name, fn);
         const node = math.parse(fn);
         this.Function = node.compile();
-        this.Parents = parser.findParents(node);
+        if (parents) {
+            this.Parents = parents;
+        } else {
+            this.Parents = parser.findParents(node);
+        }
     }
 
     sample(gene) {
@@ -99,6 +104,47 @@ class FunctionLoci extends Loci {
 
     evaluate(gene) {
         return 0;
+    }
+
+    toJSON() {
+        const js = super.toJSON();
+        js.Type = "Function";
+        js.Parents = this.Parents;
+        return js;
+    }
+}
+
+
+
+class DistributionLoci extends Loci {
+    constructor(name, di, parents) {
+        super(name, di);
+
+        this.Distribution = dist.parseDistribution(di);
+
+        if (parents) {
+            this.Parents = parents;
+        } else {
+            this.Parents = this.Distribution.Parents;
+        }
+    }
+
+    getDistribution(loc) {
+        if (this.Distribution.sample) {
+            return this.Distribution;
+        } else {
+            return this.Distribution.compile(gene);
+        }
+    }
+
+
+    sample(gene) {
+        return this.getDistribution(gene).sample();
+    }
+
+    evaluate(gene) {
+        const v = gene[this.Name];
+        return this.getDistribution(gene).logpdf(v);
     }
 
     toJSON() {
