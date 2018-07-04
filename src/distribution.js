@@ -1,6 +1,7 @@
 import * as math from "mathjs";
 import * as PD from "probability-distributions";
 import * as oc from "obj-creator";
+import {default as parser} from "./parser";
 
 
 class ProbabilityDistribution {
@@ -203,5 +204,15 @@ export default {
     Exp: DExp,
     Gamma: DGamma,
     Binom: DBinom,
-    parse: function(s) {return ws.parse(s)}
+    parse: function(exp) {
+        const parsed = parser.parseFunction(exp);
+        if (parsed.Parents.length === 0) {
+            return this.compile(parsed);
+        } else {
+            return parsed;
+        }
+    },
+    compile: function(parsed, loc) {
+        return ws.fromJSON(parser.assignParents(parsed, loc));
+    }
 }

@@ -1,27 +1,8 @@
 /**
  * Created by TimeWz667 on 03/07/2018.
  */
-
-const math = require("mathjs");
-
-
-function flattenNodes(node) {
-    const ns = [];
-    function f(node) {
-        ns.push(node);
-        if (node.args) {
-            node.args.forEach(f)
-        }
-    }
-    f(node);
-    return ns;
-}
-
-
-function findParents(node) {
-    const nodes = flattenNodes(node);
-    return nodes.filter(e => e.type === "SymbolNode").map(e => e.name);
-}
+import * as math from "mathjs";
+import {default as parser} from "../parser";
 
 
 class Loci {
@@ -107,7 +88,7 @@ class FunctionLoci extends Loci {
         super(name, fn);
         const node = math.parse(fn);
         this.Function = node.compile();
-        this.Parents = findParents(node);
+        this.Parents = parser.findParents(node);
     }
 
     sample(gene) {
@@ -132,7 +113,7 @@ class FunctionLoci extends Loci {
 class PseudoLoci extends Loci {
     constructor(name, fn) {
         super(name, fn);
-        this.Parents = findParents(math.parse(fn));
+        this.Parents = parser.findParents(math.parse(fn));
     }
 
     sample(gene) {
