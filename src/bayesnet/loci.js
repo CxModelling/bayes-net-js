@@ -29,7 +29,7 @@ class Loci {
     }
 
     fill(gene) {
-        gene.put(this.Name, this.sample(gene))
+        gene[this.Name] = this.sample(gene)
     }
 
     toJSON() {
@@ -163,11 +163,11 @@ class PseudoLoci extends Loci {
     }
 
     sample(gene) {
-        throw "This node is not usable";
+        throw `${this.Name} is not usable`;
     }
 
     evaluate(gene) {
-        throw "This node is not usable";
+        throw `${this.Name} is not usable`;
     }
 
     toJSON() {

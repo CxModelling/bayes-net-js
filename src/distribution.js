@@ -172,6 +172,97 @@ class DBinom extends ProbabilityDistribution {
 }
 
 
+class DNorm extends ProbabilityDistribution {
+    constructor(mu, std) {
+        super();
+        this.Mu = mu;
+        this.Std = std;
+        this.Name = `norm(${this.Mu}, ${this.Std})`;
+        this.json = {Name: "norm", Args: {mu: this.Mu, std: this.Std}};
+    }
+
+    get Interval() {
+        return [-Infinity, Infinity];
+    }
+
+    get Upper() {
+        return Infinity;
+    }
+
+    get Lower() {
+        return -Infinity;
+    }
+
+    get Type() {
+        return "Float";
+    }
+
+    mean() {
+        return this.Mu;
+    }
+
+    std() {
+        return this.Std;
+    }
+
+    logpdf(v) {
+        return PD.dnorm(v, this.Mu, this.Std); // todo
+    }
+
+    sample(n) {
+        n = n||1;
+        if (n === 1) {
+            return PD.rnorm(n, this.Mu, this.Std)[0];
+        } else {
+            return PD.rnorm(n, this.Mu, this.Std);
+        }
+    }
+}
+
+
+class DPois extends ProbabilityDistribution {
+    constructor(lambda) {
+        super();
+        this.Lambda = lambda;
+        this.Name = `pois(${this.Lambda})`;
+        this.json = {Name: "pois", Args: {lambda: this.Lambda}};
+    }
+
+    get Interval() {
+        return [0, Infinity];
+    }
+
+    get Lower() {
+        return -Infinity;
+    }
+
+    get Type() {
+        return "Integer";
+    }
+
+    mean() {
+        return this.Lambda;
+    }
+
+    std() {
+        return Math.sqrt(this.Lambda);
+    }
+
+    logpdf(v) {
+        return PD.dpois(this.Lambda) // todo
+    }
+
+    sample(n) {
+        n = n||1;
+        if (n === 1) {
+            return PD.rpois(1, this.Lambda)[0];
+        } else {
+            return PD.rpois(n, this.Lambda);
+        }
+    }
+}
+
+
 const ws = oc.getWorkshop("Distribution");
 
 ws.register({
@@ -200,10 +291,29 @@ ws.register({
     ]
 });
 
+ws.register({
+    Name: "norm",
+    Constructor: DNorm,
+    Validators: [
+        {name: "mu", type: "Float"},
+        {name: "std", type: "PositiveFloat"}
+    ]
+});
+
+ws.register({
+    Name: "pois",
+    Constructor: DPois,
+    Validators: [
+        {name: "lambda", type: "PositiveFloat"}
+    ]
+});
+
 export default {
     Exp: DExp,
     Gamma: DGamma,
     Binom: DBinom,
+    Norm: DNorm,
+    Pois: DPois,
     parseDistribution: function(exp) {
         const parsed = parser.parseFunction(exp);
 

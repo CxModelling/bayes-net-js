@@ -22,5 +22,9 @@ tape("distributions", function(test) {
     f = f.compile({k: 2});
     test.equals(f.Name, "gamma(2, 0.25)");
     test.deepEquals(f.toJSON().Args, { shape: 2, rate: 0.25 });
+
+    f = dist.parseDistribution("pois(2)");
+    test.equals(f.Name, "pois(2)");
+    test.deepEquals(f.toJSON().Args, { lambda: 2});
     test.end();
 });
