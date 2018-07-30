@@ -28,6 +28,10 @@ class Loci {
 
     }
 
+    get Expression() {
+        return this._name;
+    }
+
     fill(gene) {
         gene[this.Name] = this.sample(gene)
     }
@@ -60,16 +64,20 @@ class ValueLoci extends Loci {
         js.Type = "Value";
         return js;
     }
+
+    get Expression() {
+        return `${this.Name}=${this.Value}`
+    }
 }
 
 
 class ExoValueLoci extends Loci {
-    constructor(name, val) {
+    constructor(name) {
         super(name, "");
     }
 
     sample(gene) {
-        throw "This node requires pre-definition";
+        throw `${this.Name} is not usable`;
     }
 
     evaluate(gene) {
@@ -112,6 +120,10 @@ class FunctionLoci extends Loci {
         js.Parents = this.Parents;
         return js;
     }
+
+    get Expression() {
+        return `${this.Name}=${this.Definition}`
+    }
 }
 
 
@@ -153,6 +165,10 @@ class DistributionLoci extends Loci {
         js.Parents = this.Parents;
         return js;
     }
+
+    get Expression() {
+        return `${this.Name}~${this.Distribution}`
+    }
 }
 
 
@@ -176,6 +192,10 @@ class PseudoLoci extends Loci {
         js.Parents = this.Parents;
         return js;
     }
+
+    get Expression() {
+        return `${this.Name}=f(${this.Parents.join(", ")})`;
+    }
 }
 
 
@@ -183,5 +203,6 @@ export default {
     Function: FunctionLoci,
     Value: ValueLoci,
     ExoValue: ExoValueLoci,
+    Distribution: DistributionLoci,
     Pseudo: PseudoLoci
 };
