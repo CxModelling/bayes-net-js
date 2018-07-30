@@ -20,6 +20,10 @@ class Loci {
         return this._def;
     }
 
+    get Type() {
+
+    }
+
     sample(parents) {
 
     }
@@ -65,6 +69,10 @@ class ValueLoci extends Loci {
         return js;
     }
 
+    get Type() {
+        return "Value";
+    }
+
     get Expression() {
         return `${this.Name}=${this.Value}`
     }
@@ -88,6 +96,10 @@ class ExoValueLoci extends Loci {
         const js = super.toJSON();
         js.Type = "ExoValue";
         return js;
+    }
+
+    get Type() {
+        return "ExoValue";
     }
 }
 
@@ -123,6 +135,10 @@ class FunctionLoci extends Loci {
 
     get Expression() {
         return `${this.Name}=${this.Definition}`
+    }
+
+    get Type() {
+        return "Function";
     }
 }
 
@@ -161,13 +177,17 @@ class DistributionLoci extends Loci {
 
     toJSON() {
         const js = super.toJSON();
-        js.Type = "Function";
+        js.Type = "Distribution";
         js.Parents = this.Parents;
         return js;
     }
 
     get Expression() {
         return `${this.Name}~${this.Distribution}`
+    }
+
+    get Type() {
+        return "Distribution";
     }
 }
 
@@ -195,6 +215,10 @@ class PseudoLoci extends Loci {
 
     get Expression() {
         return `${this.Name}=f(${this.Parents.join(", ")})`;
+    }
+
+    get Type() {
+        return "Pseudo";
     }
 }
 

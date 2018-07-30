@@ -10,6 +10,8 @@ class BayesNet {
     constructor(name) {
         this.Name = name || 'BN';
         this.DAG = ig.newDiGraph();
+        this._frozen = false;
+
     }
 
     node(key, type, value) {
@@ -38,22 +40,43 @@ class BayesNet {
         return this;
     }
 
+    get isFrozen() {
+        return this._frozen;
+    }
+
+    get Order() {
+        return this.DAG.getOrder();
+    }
+
     get Expression() {
         const od = this.DAG.getOrder();
         return `PCore ${this.Name} {\n\t` +
-                od.map(n=>this.DAG.getNode(n).attr('loci').Expression).join("\n\t") +
+                this.DAG.getNodes(od).attr('loci').map(l=>l.Expression).join("\n\t") +
                 "\n}";
-
-        //return this.DAG.getNodes(()=>true).attr('loci').map(l=>l.Expression).join("\n");
     }
+
+    freeze() {
+        const ns = this.Order;
+        this.RootNodes = this.DAG.getNodes(e=>!e.loci.Parents).attr("id");
+        this.LeafNodes = ns.map((e, i)=>this.DAG.getDescendantKeys(e));
+        this.ExoNodes = this.DAG.getNodes(e=>e.loci.Type === 'ExoValue').attr("id");
+
+
+        this._frozen = true;
+    }
+
 }
 
 
 
 var g = new BayesNet();
 g.node('a', 'Distribution', 'exp(0.3)')
-    .node('b', 'Value', 5)
     .node('c', 'Function', 'a+b')
-    .node('d', 'Pseudo', 'a+b+ k');
+    .node('d', 'Pseudo', 'a+b+ k')
+    .node('b', 'Value', 5);
 
+g.freeze();
 console.log(g.Expression);
+console.log(g.ExoNodes);
+console.log(g.RootNodes);
+console.log(g.LeafNodes);
