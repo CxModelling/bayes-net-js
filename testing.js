@@ -58,9 +58,8 @@ class BayesNet {
     freeze() {
         const ns = this.Order;
         this.RootNodes = this.DAG.getNodes(e=>!e.loci.Parents).attr("id");
-        this.LeafNodes = ns.map((e, i)=>this.DAG.getDescendantKeys(e));
+        this.LeafNodes = ns.filter((e, i)=>!this.DAG.getChildKeys(e).length);
         this.ExoNodes = this.DAG.getNodes(e=>e.loci.Type === 'ExoValue').attr("id");
-
 
         this._frozen = true;
     }
