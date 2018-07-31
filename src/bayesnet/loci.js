@@ -157,7 +157,7 @@ class DistributionLoci extends Loci {
         }
     }
 
-    getDistribution(loc) {
+    getDistribution(gene) {
         if (this.Distribution.sample) {
             return this.Distribution;
         } else {
@@ -183,7 +183,7 @@ class DistributionLoci extends Loci {
     }
 
     get Expression() {
-        return `${this.Name}~${this.Distribution}`
+        return `${this.Name}~${this.Definition}`
     }
 
     get Type() {
