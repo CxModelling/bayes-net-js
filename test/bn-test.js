@@ -8,13 +8,13 @@ tape("bn", function(test) {
     const g = new bn.BayesNet();
     g.node('a', 'Distribution', 'exp(0.3)')
         .node('c', 'Function', 'a+b')
-        .node('d', 'Pseudo', 'a+b+ k')
+        .node('d', 'Pseudo', 'c+ k')
         .node('b', 'Value', 5);
 
     g.freeze();
-    test.deepEquals(g.ExoNodes, ["k"]);
-    test.deepEquals(g.RootNodes, ["a", "b", "k"]);
-    test.deepEquals(g.LeafNodes, ["c", "d"]);
-
+    test.deepEquals(["k"], g.ExoNodes);
+    test.deepEquals(["a", "b", "k"], g.RootNodes);
+    test.deepEquals(["d"], g.LeafNodes);
+    test.deepEquals(["k", "c", "d"], g.findSufficientNodes(['d'], ['c','k']));
     test.end();
 });

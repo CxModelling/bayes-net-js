@@ -158,7 +158,11 @@ class DBinom extends ProbabilityDistribution {
     }
 
     logpdf(v) {
-        return 0; // todo
+        let li = (v)*Math.log(this.Prob)+(this.Size - v)*Math.log(1-this.Prob);
+        li += Math.log(math.gamma(this.Size + 1));
+        li -= Math.log(math.gamma(v + 1));
+        li -= Math.log(math.gamma(this.Size - v + 1));
+        return li;
     }
 
     sample(n) {
@@ -206,7 +210,7 @@ class DNorm extends ProbabilityDistribution {
     }
 
     logpdf(v) {
-        return PD.dnorm(v, this.Mu, this.Std); // todo
+        return Math.log(PD.dnorm(v, this.Mu, this.Std));
     }
 
     sample(n) {
@@ -232,8 +236,8 @@ class DPois extends ProbabilityDistribution {
         return [0, Infinity];
     }
 
-    get Lower() {
-        return -Infinity;
+    get Upper() {
+        return Infinity;
     }
 
     get Type() {
@@ -249,7 +253,7 @@ class DPois extends ProbabilityDistribution {
     }
 
     logpdf(v) {
-        return PD.dpois(this.Lambda) // todo
+        return Math.log(PD.dpois(this.Lambda));
     }
 
     sample(n) {
@@ -258,6 +262,59 @@ class DPois extends ProbabilityDistribution {
             return PD.rpois(1, this.Lambda)[0];
         } else {
             return PD.rpois(n, this.Lambda);
+        }
+    }
+}
+
+
+class DBeta extends ProbabilityDistribution {
+    constructor(a, b) {
+        super();
+        this.A = a;
+        this.B = b;
+        this.Name = `beta(${this.A}, ${this.B})`;
+        this.json = {Name: "beta", Args: {alpha: this.A, beta: this.B}};
+    }
+
+    get Interval() {
+        return [0, 1];
+    }
+
+    get Lower() {
+        return 0;
+    }
+
+    get Upper() {
+        return 1;
+    }
+
+    get Type() {
+        return "Float";
+    }
+
+    mean() {
+        return this.A/(this.A + this.B);
+    }
+
+    std() {
+        const ab = this.A + this.B;
+        return Math.sqrt(this.A * this.B / (ab + 1)) / ab;
+    }
+
+    logpdf(v) {
+        let li = (this.A-1)*Math.log(v)+(this.B-1)*Math.log(1-v);
+        li += Math.log(math.gamma(this.A+this.B));
+        li -= Math.log(math.gamma(this.A));
+        li -= Math.log(math.gamma(this.B));
+        return li;
+    }
+
+    sample(n) {
+        n = n||1;
+        if (n === 1) {
+            return PD.rbeta(1, this.A, this.B)[0];
+        } else {
+            return PD.rbeta(n, this.A, this.B);
         }
     }
 }
@@ -305,6 +362,15 @@ ws.register({
     Constructor: DPois,
     Validators: [
         {name: "lambda", type: "PositiveFloat"}
+    ]
+});
+
+ws.register({
+    Name: "beta",
+    Constructor: DBeta,
+    Validators: [
+        {name: "alpha", type: "PositiveFloat"},
+        {name: "beta", type: "PositiveFloat"}
     ]
 });
 
