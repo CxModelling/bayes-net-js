@@ -10,7 +10,6 @@ export class BayesNet {
         this.Name = name || 'BN';
         this.DAG = ig.newDiGraph();
         this._frozen = false;
-
     }
 
     node(key, type, value) {
@@ -20,7 +19,7 @@ export class BayesNet {
                 value = key.Def;
                 key = key.Name;
             } else {
-                return this.DAG.getNode(key).get();
+                return this.DAG.getNode(key).attr("loci");
             }
 
         }
@@ -39,6 +38,35 @@ export class BayesNet {
         return this;
     }
 
+    sample(given) {
+        const x = Object.assign({}, given);
+        g.Order.filter(e=>!x[e]).forEach(e=> g.node(e).fill(x));
+        return x;
+    }
+
+    findSufficientNodes(include, given) {
+        given = new Set(given);
+        let inc = new Set(include);
+        let querying = include;
+
+        while(true) {
+            querying = querying.map(e => this.DAG.getParentKeys(e))
+                .reduce((a, b) => a.concat(b), [])
+                .filter(e => !given.has(e) & !inc.has(e));
+
+            querying = [...(new Set(querying))];
+
+            if (querying.length > 0) {
+                querying.forEach(e => inc.add(e));
+            } else {
+                break;
+            }
+        }
+
+        for(let k in given.keys()) {inc.add(k);}
+        return this.Order.filter(e=>inc.has(e)|given.has(e));
+    }
+
     get isFrozen() {
         return this._frozen;
     }
@@ -55,6 +83,7 @@ export class BayesNet {
     }
 
     freeze() {
+        if (this._frozen) return;
         const ns = this.Order;
         this.RootNodes = this.DAG.getNodes(e=>!e.loci.Parents).attr("id");
         this.LeafNodes = ns.filter(e=>!this.DAG.getChildKeys(e).length);
