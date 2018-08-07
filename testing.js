@@ -49,5 +49,20 @@ const bp = [
 ];
 
 
+class NodeGroup {
+    constructor(name, fixed) {
+        this.Name = name;
+        this.Nodes = new Set(fixed);
+        this.Children = new Set();
+    }
+
+    appendChildren(chd) {
+        this.Children.add(chd);
+    }
+
+    needs(node, g) {
+
+    }
+}
 
 
