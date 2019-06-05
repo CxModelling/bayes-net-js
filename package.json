@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/TimeWz667/bayes-net-js#readme",
   "devDependencies": {
-    "eslint": "^4.19.0",
+    "eslint": ">4.19.0",
     "rollup": "^0.57.1",
     "tape": "^4.9.0",
     "uglify-js-es6": "^2.8.9"
