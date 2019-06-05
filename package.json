@@ -27,16 +27,17 @@
   },
   "homepage": "https://github.com/TimeWz667/bayes-net-js#readme",
   "devDependencies": {
-    "eslint": ">4.19.0",
+    "eslint": ">=5.16.0",
     "rollup": "^0.57.1",
-    "tape": "^4.9.0",
-    "uglify-js-es6": "^2.8.9"
+    "tape": "^4.10.2",
+    "uglify-js-es6": "^2.8.9",
+    "xxxxx": "^1.0.3"
   },
   "dependencies": {
     "infergraph.js": "^1.0.0",
-    "mathjs": "^5.0.0",
-    "npm": "^6.1.0",
-    "obj-creator": "^1.0.5",
-    "probability-distributions": "^0.9.1"
+    "mathjs": ">=5.10.3",
+    "npm": "^6.9.0",
+    "obj-creator": "1.0.5",
+    "probability-distributions": ">=0.9.1"
   }
 }
